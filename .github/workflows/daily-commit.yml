@@ -1,0 +1,25 @@
+name: Daily Commit Update
+
+on:
+  schedule:
+    - cron: "23 3 * * *"  # Runs daily at 03:23 UTC
+  workflow_dispatch:
+
+jobs:
+  commit-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add commit for 24f2003053@ds.study.iitm.ac.in
+        run: |
+          echo "Daily update: $(date -u)" >> logs/daily-log.txt
+          git config --global user.email "24f2003053@ds.study.iitm.ac.in"
+          git config --global user.name "DevSync Action Bot"
+          git add logs/daily-log.txt
+          git commit -m "Daily update: $(date -u)" || echo "Nothing to commit"
+          git push
